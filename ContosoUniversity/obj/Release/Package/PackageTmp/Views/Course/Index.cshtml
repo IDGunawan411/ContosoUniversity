@@ -1,0 +1,63 @@
+﻿@model PagedList.IPagedList<ContosoUniversity.Models.Course>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@using ContosoUniversity.Models;
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Course", FormMethod.Get))
+{
+<p>
+    Title : @Html.TextBox("S_Title", ViewBag.CurrentFilter as string)
+    Cd_From   : @Html.TextBox("S_Credit_From", ViewBag.CurrentFilter as string)
+    Cd_To     : @Html.TextBox("S_Credit_To", ViewBag.CurrentFilter as string)
+
+    <input type="submit" value="Search" />
+</p>
+}
+
+<table class="table table-bordered">
+    <tr>
+        <th>
+            Title
+            @Html.ActionLink("A", "Index", new { sortOrder = ViewBag.Title_Asc, currentFilter = ViewBag.CurrentFilter }) /
+            @Html.ActionLink("D", "Index", new { sortOrder = ViewBag.Title_Desc, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            Credits
+            @Html.ActionLink("A", "Index", new { sortOrder = ViewBag.Credit_Asc, currentFilter = ViewBag.CurrentFilter }) /
+            @Html.ActionLink("D", "Index", new { sortOrder = ViewBag.Credit_Desc, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Credits)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.CourseID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.CourseID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.CourseID })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

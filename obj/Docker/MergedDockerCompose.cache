@@ -1,0 +1,9 @@
+services:
+  contosouniversity:
+    build:
+      context: C:\Users\User\source\repos\Gunawan_Prasetyo\ContosoUniversity\ContosoUniversity
+      dockerfile: Dockerfile
+    image: contosouniversity
+    ports:
+    - target: 80
+version: '3.4'

@@ -1,0 +1,80 @@
+﻿@model PagedList.IPagedList<ContosoUniversity.Models.Student>
+
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+@{
+    ViewBag.Title = "Students";
+}
+
+<h2>Students</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "Student", FormMethod.Get))
+{
+<p>
+    <script>
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+    </script>
+    First Name: @Html.TextBox("S_NameFirst", ViewBag.CurentFilter as string)
+    Last Name: @Html.TextBox("S_LastName", ViewBag.CurrentFilter as string)
+
+    EnrollmentDate: @Html.TextBox("S_Enrollment", ViewBag.S_Enrollment as string, new { @type = "date", @class = "dateTime", @id = "datepicker" })
+
+    <input type="submit" value="Search" />
+</p>
+}
+<table class="table table-bordered">
+    <tr>
+        <th>ID Student</th>
+        <th>
+            First Name
+            @Html.ActionLink("A", "Index", new { sortOrder = ViewBag.First_Name_Asc, S_Namefirst = ViewBag.CurrentNF, S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN }) /
+            @Html.ActionLink("D", "Index", new { sortOrder = ViewBag.First_Name_Desc, S_Namefirst = ViewBag.CurrentNF, S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN })
+        </th>
+        <th>
+            Last Name
+            @Html.ActionLink("A", "Index", new { sortOrder = ViewBag.Last_Name_Asc, S_Namefirst = ViewBag.CurrentNF, S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN }) /
+            @Html.ActionLink("D", "Index", new { sortOrder = ViewBag.Last_Name_Desc, S_Namefirst = ViewBag.CurrentNF, S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN })
+        </th>
+        <th>
+            EnrollmentDate
+            @Html.ActionLink("A", "Index", new { sortOrder = ViewBag.Date_Asc, S_Namefirst = ViewBag.CurrentNF, S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN }) /
+            @Html.ActionLink("D", "Index", new { sortOrder = ViewBag.Date_Desc, S_Namefirst = ViewBag.CurrentNF, S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN })
+        </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID_Student)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.First_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Last_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+            </td>
+            <td>    
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Student }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID_Student }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Student })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, S_Namefirst = ViewBag.CurrentNF, 
+S_LastName = ViewBag.CurrentLN, S_Enrollment = ViewBag.CurrentEN }))
